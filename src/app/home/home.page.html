@@ -4,7 +4,7 @@
   
 <ion-content class="ion-padding">
   
-  <ion-input [(ngModel)]="autocomplete.input" (ionInput)="UpdateSearchResults()" placeholder="Buscar dirección"  (ionClear)="ClearAutocomplete()"></ion-input>
+  <ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="UpdateSearchResults()" placeholder="Buscar dirección"  (ionClear)="ClearAutocomplete()"></ion-searchbar>
   <ion-list [hidden]="autocompleteItems.length == 0">
     <ion-item *ngFor="let item of autocompleteItems" tappable (click)="SelectSearchResult(item) ">
       {{ item.description }}
@@ -13,4 +13,5 @@
 
   <ion-label style="font-weight: bold;">{{label_coordenadas}}</ion-label> 
   <ion-label>{{coordenadas}}</ion-label>
+
 </ion-content>

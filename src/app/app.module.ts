@@ -13,18 +13,22 @@ import { AppRoutingModule } from './app-routing.module';
 //IMPORT THE PLUGINS
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
+import { GooglePlaceModule } from "ngx-google-places-autocomplete";
+
+
 
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  imports: [GooglePlaceModule, BrowserModule, IonicModule.forRoot(), AppRoutingModule],
   providers: [
     StatusBar,
     SplashScreen,
     //Añadir Geolocation y NativeGeocoder en los providers
     Geolocation,    
     NativeGeocoder,
+    GooglePlaceModule,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
