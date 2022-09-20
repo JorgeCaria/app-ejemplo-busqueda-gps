@@ -1,9 +1,10 @@
-<ion-header class="ion-padding">
-  <h1>Buscador de coordenadas</h1> 
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Mapa</ion-title>
+  </ion-toolbar>
 </ion-header>
-  
+
 <ion-content class="ion-padding">
-  
   <ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="UpdateSearchResults()" placeholder="Buscar dirección"  (ionClear)="ClearAutocomplete()"></ion-searchbar>
   <ion-list [hidden]="autocompleteItems.length == 0">
     <ion-item *ngFor="let item of autocompleteItems" tappable (click)="SelectSearchResult(item) ">
@@ -15,12 +16,9 @@
   <ion-label>{{coordenadas}}</ion-label>
 
   <p>
-    <ion-label>¿Está dentro de Asturias?</ion-label>
+    <ion-label>¿Está dentro de Asturias? </ion-label>
     <ion-label>{{esta_dentro}}</ion-label>
   </p>
 
-  <ion-button routerLink="/mapa" expand="block" fill="clear" shape="round">
-    Ver mapa
-  </ion-button>
-
+  <div #map id="map"></div>
 </ion-content>
