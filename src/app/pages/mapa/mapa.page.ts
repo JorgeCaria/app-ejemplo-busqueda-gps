@@ -69,7 +69,7 @@ export class MapaPage{
     
     //this.map.data.loadGeoJson('data/data.json')
 
-    let A_POINTS = [
+    let dibujo_Asturias = [
       {lat: 43.67432820783561, lng: -5.844039916992187},
       {lat: 43.59232754538541, lng: -7.00927734375},
       {lat: 43.464880828929545, lng: -7.0697021484375},
@@ -103,7 +103,14 @@ export class MapaPage{
       {lat: 43.67432820783561, lng: -5.844039916992187},
     ];
 
-    this.drawPath(A_POINTS);
+    let dibujo_triangulo_oviedo = [
+      {lat:  43.40429919674392, lng: -5.854339599609374},
+      {lat: 43.333918561984014, lng: -5.875282287597655},
+      {lat: 43.36312895068202, lng: -5.778465270996094},
+      {lat:  43.40429919674392, lng: -5.854339599609374},
+    ];
+
+    this.drawPath(dibujo_triangulo_oviedo);
   }
 
   drawPath(path){

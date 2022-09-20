@@ -1,5 +1,7 @@
 package io.ionic.starter;
 
-import com.getcapacitor.BridgeActivity;
+
+
+import io.getcapacitor.BridgeActivity;
 
 public class MainActivity extends BridgeActivity {}
