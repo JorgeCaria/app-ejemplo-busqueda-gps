@@ -4,63 +4,6 @@ import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
 declare var google;
 
 
-
-var mi_GeoJSON = {
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "stroke": "#555555",
-        "stroke-width": 2,
-        "stroke-opacity": 1,
-        "fill": "#555555",
-        "fill-opacity": 0.5,
-        "name": "aviles_coordenadas"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -5.939140319824219,
-              43.59481405781924
-            ],
-            [
-              -5.954246520996094,
-              43.58175872138417
-            ],
-            [
-              -5.953044891357422,
-              43.54929461786305
-            ],
-            [
-              -5.911502838134766,
-              43.52204112424862
-            ],
-            [
-              -5.882320404052734,
-              43.54369559037468
-            ],
-            [
-              -5.9154510498046875,
-              43.58996526341285
-            ],
-            [
-              -5.917682647705077,
-              43.59568431289932
-            ],
-            [
-              -5.939140319824219,
-              43.59481405781924
-            ]
-          ]
-        ]
-      }
-    }
-  ]
-}
-
 const geocoder = new google.maps.Geocoder();
 
 

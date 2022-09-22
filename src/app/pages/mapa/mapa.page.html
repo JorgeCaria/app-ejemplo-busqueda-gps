@@ -1,5 +1,12 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+          defaultHref="home"
+          [text]="Volver"
+          [icon]="back">
+      </ion-back-button>
+    </ion-buttons>
     <ion-title>Mapa</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -16,7 +23,7 @@
   <ion-label>{{coordenadas}}</ion-label>
 
   <p>
-    <ion-label>¿Está dentro de Asturias? </ion-label>
+    <ion-label>¿Está dentro de la zona señalada de Oviedo? </ion-label>
     <ion-label>{{esta_dentro}}</ion-label>
   </p>
 
