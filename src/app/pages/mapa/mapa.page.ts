@@ -124,6 +124,8 @@ export class MapaPage{
     this.showMap();
   }
 
+  
+  //ENSEÑAR MAPA EN LA APP
   showMap(){
     const location = new google.maps.LatLng(43.361557, -5.849807);
     const options = {
@@ -136,13 +138,28 @@ export class MapaPage{
     this.drawPath(dibujo_triangulo_oviedo);
   }
 
+  //ENSEÑAR MAPA EN COORDENADAS RECIBIDAS
+  showLocationInMap(lat, lng){
+    const location = new google.maps.LatLng(lat, lng);
+    const options = {
+      center:location,
+      zoom:9,
+      disableDefaultUI: true
+    }
+
+    this.map = new google.maps.Map(this.mapRef.nativeElement, options);
+    this.drawPath(dibujo_triangulo_oviedo);
+  }
+
+  
+
   drawPath(path){
     this.currentMapTrack = new google.maps.Polyline({
       path: path,
       geodesic: true,
       strokeColor:'#ff00ff',
       strokeOpacity:1.0,
-      strokeWeight:3
+      strokeWeight:3,
     });
 
     this.currentMapTrack.setMap(this.map);
@@ -166,7 +183,6 @@ export class MapaPage{
       //this.addInfoWindowToMarker(mapMarker);
     }
   }
-
   
   //AUTOCOMPLETE, SIMPLEMENTE ACTUALIZAMOS LA LISTA CON CADA EVENTO DE ION CHANGE EN LA VISTA.
   UpdateSearchResults(){
@@ -221,8 +237,15 @@ export class MapaPage{
         );
 
 
-        this.esta_dentro = pointInPolygon([this.resultados_lat,this.resultados_long], poligono_triangulo_oviedo);
+        //this.esta_dentro = pointInPolygon([this.resultados_lat,this.resultados_long], poligono_triangulo_oviedo);
         
+        if(pointInPolygon([this.resultados_lat,this.resultados_long], poligono_triangulo_oviedo)){
+          this.esta_dentro = 'Sí.';
+        } else{
+          this.esta_dentro = 'No.';
+        }
+
+
         this.markers= [
           {
             title: "Sitio seleccionado",
