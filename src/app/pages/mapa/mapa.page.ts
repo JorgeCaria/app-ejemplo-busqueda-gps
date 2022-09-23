@@ -90,6 +90,7 @@ let poligono_oviedo =
        ];
        
        let p_a = [];
+       var _myPolygon;
 
        //Creamos objeto dibujador de figuras  
 const drawingManager = new google.maps.drawing.DrawingManager({
@@ -112,13 +113,13 @@ const drawingManager = new google.maps.drawing.DrawingManager({
           fillColor: "#ffff00",
           fillOpacity: 0.3,
           strokeWeight: 5,
-          clickable: false,
+          clickable: true,
           editable: true,
           zIndex: 1,
         },
       });
   
-  
+var selectedShape;
 
 @Component({
   selector: 'app-mapa',
@@ -146,6 +147,7 @@ export class MapaPage{
   resultados_lat:any;
   resultados_long:any;
   area_dibujada:[];
+  
 
   infoWindows:any;
   markers: any = [];
@@ -164,7 +166,8 @@ export class MapaPage{
 
   ionViewDidEnter(){
     this.showMap();
-    
+    // google.maps.event.addListener(drawingManager, 'drawingmode_changed', clearSelection());
+    // google.maps.event.addListener(this.map, 'click', clearSelection);
   }
 
   
@@ -177,11 +180,17 @@ export class MapaPage{
       disableDefaultUI: true
     }
 
+
     this.map = new google.maps.Map(this.mapRef.nativeElement, options);
+    
     drawingManager.setMap(this.map);
+    
+
     google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
       if (event.type == 'polygon') {
         
+        _myPolygon = event.overlay;
+
         //Obtenemos el array de coordinadas del poligono dibujado
         var polygon = event.overlay.getPath().getArray();
       
@@ -232,19 +241,45 @@ export class MapaPage{
       console.log(this.array_coordinadas_dibujo)
 
       p_a = this.array_coordinadas_dibujo;
-      // alert(b);
-      // alert(poligono_triangulo_oviedo);
+      console.log('p_a:',p_a)
+      
 
-      // console.log(b);
-      // console.log(this.area_dibujada);
-      // console.log(poligono_triangulo_oviedo);
+      drawingManager.setDrawingMode(null);
 
+      
+
+      //_myPolygon.setPath([]); 
+
+      //google.maps.event.addListener(drawingManager, 'drawingmode_changed', clearSelection());
+      //google.maps.event.addListener(this.map, 'click', this.clearSelection);
+      //google.maps.event.addDomListener(document.getElementById('delete-button'), 'click', this.deleteSelectedShape);
+      
       //event.overlay.setMap(null);
       }
+
+      //Esta línea haria que no se pudiera dibujar más de uno poligono
+      // drawingManager.setMap(null);
     });
-    //this.drawPath(dibujo_triangulo_oviedo);
     
+    //  google.maps.event.addListener(drawingManager, 'drawingmode_changed', function(event){
+      
+    //   _myPolygon.setPath([]); 
+    //  });
+    
+
+    // google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event){
+    //   event.overlay.setMap(null);
+    // });
+    
+    //this.drawPath(dibujo_triangulo_oviedo);
+    google.maps.event.addListener(drawingManager, "drawingmode_changed", function() {
+      if ((drawingManager.getDrawingMode() == google.maps.drawing.OverlayType.POLYGON) && 
+          ( _myPolygon != null))
+          _myPolygon.setMap(null);
+  });
+  
   }
+
 
   //Enseñar en el mapa las coordinadas recibidas
   showLocationInMap(lat, lng){
@@ -287,7 +322,7 @@ export class MapaPage{
     }
   }
   
-  //AUTOCOMPLETE, SIMPLEMENTE ACTUALIZAMOS LA LISTA CON CADA EVENTO DE ION CHANGE EN LA VISTA.
+  //Autocomplete, actualizamos la lista en cada evento de ion list de la vista.
   UpdateSearchResults(){
     
     if (this.autocomplete.input == '') {
@@ -305,7 +340,7 @@ export class MapaPage{
     });
   }
   
-  //FUNCION QUE LLAMAMOS DESDE EL ITEM DE LA LISTA.
+  //Función que llamamos desde cada elemento de la lista.
   SelectSearchResult(item) {
     //AQUI PONDREMOS LO QUE QUERAMOS QUE PASE CON EL PLACE ESCOGIDO, GUARDARLO, SUBIRLO A FIRESTORE.
     //HE AÑADIDO UN ALERT PARA VER EL CONTENIDO QUE NOS OFRECE GOOGLE Y GUARDAMOS EL PLACEID PARA UTILIZARLO POSTERIORMENTE SI QUEREMOS.
@@ -372,3 +407,7 @@ export class MapaPage{
     this.autocomplete.input = ''
   }
 }
+function clearSelection(): any {
+  _myPolygon.setMap(null);
+}
+
