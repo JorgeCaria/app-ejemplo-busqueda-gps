@@ -88,7 +88,10 @@ let poligono_oviedo =
        [43.378227953964156,-5.790309906005859],
        [43.401056495052906,-5.840435028076172],
        ];
+       
+       let p_a = [];
 
+       //Creamos objeto dibujador de figuras  
 const drawingManager = new google.maps.drawing.DrawingManager({
         drawingMode: google.maps.drawing.OverlayType.POLYGON,
         drawingControl: true,
@@ -146,6 +149,7 @@ export class MapaPage{
 
   infoWindows:any;
   markers: any = [];
+  array_coordinadas_dibujo: any;
 
 
   constructor( 
@@ -164,7 +168,7 @@ export class MapaPage{
   }
 
   
-  //ENSEÑAR MAPA EN LA APP
+  //Enseñar el mapa en la app
   showMap(){
     const location = new google.maps.LatLng(43.361557, -5.849807);
     const options = {
@@ -177,38 +181,72 @@ export class MapaPage{
     drawingManager.setMap(this.map);
     google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
       if (event.type == 'polygon') {
+        
+        //Obtenemos el array de coordinadas del poligono dibujado
         var polygon = event.overlay.getPath().getArray();
       
-        polygon = polygon.filter(function( element ) {
-          return element !== undefined;
-       });
-
+  
+      //  
       for(let x of polygon) {
         this.area_dibujada = this.area_dibujada + x;
       }
 
-      this.area_dibujada = this.area_dibujada + this.area_dibujada[1];
+      console.log(this.area_dibujada);
 
-      alert(this.area_dibujada);
+      //Filtramos el 'undefined' del array de coordinadas
+      let results = polygon.filter(element => {
+        return element !== undefined;
+      });
+      
 
-        // var radius = event.overlay.getPath();
-        // this.area_dibujada = radius.getArray();
-        //console.log(radius.getArray());
-        //alert(radius.getArray());
+      this.area_dibujada = results +'';//!No borrar esta línea
 
-        // var pointArray=[];    
-        // for (var i = 0; i < radius.getArray().length; i++) {   
-        //   pointArray.push(new google.maps.LatLng(radius.getArray()[i].lat,
-        //   radius.getArray()[i].lng));
-        // }
-        // console.log(pointArray);
+      console.log(this.area_dibujada);
+      //this.area_dibujada = results;
+
+      this.area_dibujada = this.area_dibujada.replace(/\(/g, '');
+      this.area_dibujada = this.area_dibujada.replace(/\)/g, '');
+      
+      console.log(this.area_dibujada);
+
+      //this.area_dibujada = [this.area_dibujada];
+      var b = this.area_dibujada.split(',').map(Number);
+
+      this.area_dibujada = b;
+      console.log(this.area_dibujada);
+      console.log(this.area_dibujada[0]);
+
+
+      var newArray = []
+
+      for (var i=0; i<this.area_dibujada.length; i+=2) {
+        newArray.push([this.area_dibujada[i], this.area_dibujada[i+1]])
+      }
+      
+      console.log(newArray);
+      this.array_coordinadas_dibujo = newArray;
+      console.log(this.array_coordinadas_dibujo);
+      console.log(poligono_triangulo_oviedo);
+
+      this.array_coordinadas_dibujo.push(this.array_coordinadas_dibujo[0]);
+      console.log(this.array_coordinadas_dibujo)
+
+      p_a = this.array_coordinadas_dibujo;
+      // alert(b);
+      // alert(poligono_triangulo_oviedo);
+
+      // console.log(b);
+      // console.log(this.area_dibujada);
+      // console.log(poligono_triangulo_oviedo);
+
+      //event.overlay.setMap(null);
       }
     });
     //this.drawPath(dibujo_triangulo_oviedo);
     
   }
 
-  //ENSEÑAR MAPA EN COORDENADAS RECIBIDAS
+  //Enseñar en el mapa las coordinadas recibidas
   showLocationInMap(lat, lng){
     const location = new google.maps.LatLng(lat, lng);
     const options = {
@@ -221,7 +259,7 @@ export class MapaPage{
     this.drawPath(dibujo_triangulo_oviedo);
   }
 
-  //DIBUJAR LÍNEAS EN MAPA
+  //Dibujar líneas en el mapa
    drawPath(path){
      this.currentMapTrack = new google.maps.Polyline({
        path: path,
@@ -303,8 +341,8 @@ export class MapaPage{
 
 
         //this.esta_dentro = pointInPolygon([this.resultados_lat,this.resultados_long], poligono_triangulo_oviedo);
-        
-        if(pointInPolygon([this.resultados_lat,this.resultados_long], poligono_triangulo_oviedo)){
+        console.log(this.array_coordinadas_dibujo)
+        if(pointInPolygon([this.resultados_lat,this.resultados_long], p_a)){
           this.esta_dentro = 'Sí.';
         } else{
           this.esta_dentro = 'No.';
