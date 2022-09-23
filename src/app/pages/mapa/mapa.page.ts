@@ -1,4 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
+import {
+  GoogleMaps,
+  GoogleMap,
+  GoogleMapsEvent,
+  Marker,
+  Polygon,
+  BaseArrayClass,
+  ILatLng,
+  LatLng
+} from '@ionic-native/google-maps';
+import { Platform } from '@ionic/angular';
 
 declare var google : any;
 declare var require: any
@@ -78,7 +89,33 @@ let poligono_oviedo =
        [43.401056495052906,-5.840435028076172],
        ];
 
-
+const drawingManager = new google.maps.drawing.DrawingManager({
+        drawingMode: google.maps.drawing.OverlayType.POLYGON,
+        drawingControl: true,
+        drawingControlOptions: {
+          position: google.maps.ControlPosition.TOP_CENTER,
+          drawingModes: [
+            //google.maps.drawing.OverlayType.MARKER,
+            //google.maps.drawing.OverlayType.CIRCLE,
+            google.maps.drawing.OverlayType.POLYGON,
+            //google.maps.drawing.OverlayType.POLYLINE,
+            //google.maps.drawing.OverlayType.RECTANGLE,
+          ],
+        },
+        markerOptions: {
+          icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+        },
+        circleOptions: {
+          fillColor: "#ffff00",
+          fillOpacity: 0.3,
+          strokeWeight: 5,
+          clickable: false,
+          editable: true,
+          zIndex: 1,
+        },
+      });
+  
+  
 
 @Component({
   selector: 'app-mapa',
@@ -105,6 +142,7 @@ export class MapaPage{
   currentMapTrack:any;
   resultados_lat:any;
   resultados_long:any;
+  area_dibujada:[];
 
   infoWindows:any;
   markers: any = [];
@@ -122,6 +160,7 @@ export class MapaPage{
 
   ionViewDidEnter(){
     this.showMap();
+    
   }
 
   
@@ -135,7 +174,38 @@ export class MapaPage{
     }
 
     this.map = new google.maps.Map(this.mapRef.nativeElement, options);
-    this.drawPath(dibujo_triangulo_oviedo);
+    drawingManager.setMap(this.map);
+    google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+      if (event.type == 'polygon') {
+        var polygon = event.overlay.getPath().getArray();
+      
+        polygon = polygon.filter(function( element ) {
+          return element !== undefined;
+       });
+
+      for(let x of polygon) {
+        this.area_dibujada = this.area_dibujada + x;
+      }
+
+      this.area_dibujada = this.area_dibujada + this.area_dibujada[1];
+
+      alert(this.area_dibujada);
+
+        // var radius = event.overlay.getPath();
+        // this.area_dibujada = radius.getArray();
+        //console.log(radius.getArray());
+        //alert(radius.getArray());
+
+        // var pointArray=[];    
+        // for (var i = 0; i < radius.getArray().length; i++) {   
+        //   pointArray.push(new google.maps.LatLng(radius.getArray()[i].lat,
+        //   radius.getArray()[i].lng));
+        // }
+        // console.log(pointArray);
+      }
+    });
+    //this.drawPath(dibujo_triangulo_oviedo);
+    
   }
 
   //ENSEÑAR MAPA EN COORDENADAS RECIBIDAS
@@ -151,20 +221,18 @@ export class MapaPage{
     this.drawPath(dibujo_triangulo_oviedo);
   }
 
-  
+  //DIBUJAR LÍNEAS EN MAPA
+   drawPath(path){
+     this.currentMapTrack = new google.maps.Polyline({
+       path: path,
+       geodesic: true,
+       strokeColor:'#ff00ff',
+       strokeOpacity:1.0,
+       strokeWeight:3,
+     });
 
-  drawPath(path){
-    this.currentMapTrack = new google.maps.Polyline({
-      path: path,
-      geodesic: true,
-      strokeColor:'#ff00ff',
-      strokeOpacity:1.0,
-      strokeWeight:3,
-    });
-
-    this.currentMapTrack.setMap(this.map);
-  }
-
+     this.currentMapTrack.setMap(this.map);
+   }
 
   addaMarkersToMap(markers){
     for(let marker of markers){
@@ -177,9 +245,6 @@ export class MapaPage{
       });
 
       mapMarker.setMap(this.map);
-
-      
-      
       //this.addInfoWindowToMarker(mapMarker);
     }
   }
