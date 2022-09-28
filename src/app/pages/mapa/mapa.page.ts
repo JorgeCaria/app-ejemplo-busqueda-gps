@@ -166,8 +166,7 @@ export class MapaPage{
 
   ionViewDidEnter(){
     this.showMap();
-    // google.maps.event.addListener(drawingManager, 'drawingmode_changed', clearSelection());
-    // google.maps.event.addListener(this.map, 'click', clearSelection);
+    
   }
 
   
@@ -276,6 +275,7 @@ export class MapaPage{
       if ((drawingManager.getDrawingMode() == google.maps.drawing.OverlayType.POLYGON) && 
           ( _myPolygon != null))
           _myPolygon.setMap(null);
+          this.mapMarker.setMap(null);
   });
   
   }
